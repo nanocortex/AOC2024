@@ -1,29 +1,28 @@
 ﻿namespace AdventOfCode;
 
-public class Day01 : BaseDay
+public sealed class Day01 : BaseDay
 {
-    private readonly string _input;
+    private readonly List<string> _lines;
 
     public Day01()
     {
-        _input = File.ReadAllText(InputFilePath);
+        _lines = File.ReadAllLines(InputFilePath).ToList();
     }
 
     public override ValueTask<string> Solve_1()
     {
-        var lines = _input.Split('\n', StringSplitOptions.RemoveEmptyEntries);
         var leftList = new List<int>();
         var rightList = new List<int>();
-        foreach (var line in lines)
+        foreach (var line in _lines)
         {
-            var parts = line.Split("   ", StringSplitOptions.RemoveEmptyEntries);
+            var parts = line.Split("   ");
             leftList.Add(int.Parse(parts[0]));
             rightList.Add(int.Parse(parts[1]));
         }
 
         leftList = leftList.Order().ToList();
         rightList = rightList.Order().ToList();
-        
+
         var distance = 0;
         foreach (var (index, left) in leftList.Index())
         {
@@ -31,31 +30,27 @@ public class Day01 : BaseDay
             distance += d;
         }
 
-        return new ValueTask<string>($"Solution to {ClassPrefix} {CalculateIndex()}, part 1: {distance}");
+        return new ValueTask<string>($"{distance}");
     }
 
     public override ValueTask<string> Solve_2()
     {
-        var lines = _input.Split('\n', StringSplitOptions.RemoveEmptyEntries);
         var leftList = new List<int>();
         var rightList = new List<int>();
-        foreach (var line in lines)
+        foreach (var line in _lines)
         {
-            var parts = line.Split("   ", StringSplitOptions.RemoveEmptyEntries);
+            var parts = line.Split("   ");
             leftList.Add(int.Parse(parts[0]));
             rightList.Add(int.Parse(parts[1]));
         }
 
-
         var score = 0;
-        foreach (var (index, left) in leftList.Index())
+        foreach (var left in leftList)
         {
             var rightListCount = rightList.Count(x => x == left);
-            
             score += left * rightListCount;
         }
-        
-        
-        return new ValueTask<string>($"Solution to {ClassPrefix} {CalculateIndex()}, part 2: {score}");
+
+        return new ValueTask<string>($"{score}");
     }
 }

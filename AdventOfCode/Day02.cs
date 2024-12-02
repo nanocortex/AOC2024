@@ -1,34 +1,27 @@
 ﻿namespace AdventOfCode;
 
-public class Day02 : BaseDay
+public sealed class Day02 : BaseDay
 {
-    private readonly string _input;
-
-    private const int MinDiff = 1;
-    private const int MaxDiff = 3;
-
+    private readonly List<string> _lines;
 
     public Day02()
     {
-        _input = File.ReadAllText(InputFilePath);
+        _lines = File.ReadAllLines(InputFilePath).ToList();
     }
 
     public override ValueTask<string> Solve_1()
     {
-        var lines = _input.Split('\n', StringSplitOptions.RemoveEmptyEntries);
-        var safeCount = lines.Select(line => IsReportSafe(line.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList())).Count(safe => safe);
-        return new ValueTask<string>($"Solution to {ClassPrefix} {CalculateIndex()}, part 1: {safeCount}");
+        var safeCount = _lines.Select(line => IsReportSafe(line.Split(' ').Select(int.Parse).ToList())).Count(safe => safe);
+        return new ValueTask<string>($"{safeCount}");
     }
 
     public override ValueTask<string> Solve_2()
     {
-        var lines = _input.Split('\n', StringSplitOptions.RemoveEmptyEntries);
-
         var safeCount = 0;
 
-        foreach (var line in lines)
+        foreach (var line in _lines)
         {
-            var levels = line.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList();
+            var levels = line.Split(' ').Select(int.Parse).ToList();
 
             if (IsReportSafe(levels))
             {
@@ -47,8 +40,7 @@ public class Day02 : BaseDay
             }
         }
 
-
-        return new ValueTask<string>($"Solution to {ClassPrefix} {CalculateIndex()}, part 2: {safeCount}");
+        return new ValueTask<string>($"{safeCount}");
     }
 
     private bool IsReportSafe(List<int> levels)
@@ -65,7 +57,7 @@ public class Day02 : BaseDay
 
             var diff = Math.Abs(current - prev);
 
-            if (prevDiffType != type || diff is < MinDiff or > MaxDiff)
+            if (prevDiffType != type || diff is < 1 or > 3)
                 return false;
 
             prev = current;
